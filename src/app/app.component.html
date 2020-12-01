@@ -1,0 +1,33 @@
+<div class='divTable' style="width:100%" >
+		<div class='divTableBody' style="width:100%">
+			<div id='divTableRowHeaderId' class='divTableRow' style="width:100%">
+				<div id='divTableCellHeader0Id' class='divTableCellNoBorder' style="width:10%">&nbsp;</div>
+				<div id='divTableCellHeader1Id' class='divTableCellNoBorder' style="width:10%">&nbsp;</div>
+				<div id='divTableCellHeader2Id' class='divTableCellNoBorder' style="width:60%;text-align: center;"><h3>Web Application Sample</h3></div>
+				<div id='divTableCellHeader3Id' class='divTableCellNoBorder' style="width:10%">&nbsp;</div>
+				<div id='divTableCellHeader4Id' class='divTableCellNoBorder' style="width:10%">
+						<form id="logoutFormId" action="logout" method="POST">
+									<input id="csrfId" name="_csrf" type="hidden" value="{{getCSRF()}}"/>
+									<button onclick="javascript:submit()">sign off</button>
+						</form>		
+				</div>
+			</div>
+		</div>
+</div>
+
+<nav>
+	<div class='divTable' style="width:100%;" >
+			<div class='divTableBody' style="width:100%;">
+				<div id='divTableRowHeaderId' class='divTableRow' style="width:100%;background-color: #c0c0c0;">
+					<div id='divMenuTableCell0Id' class='divTableCellNoBorder' style="padding:10px">
+						<a routerLink="/samples">editor</a>
+						&nbsp;&nbsp;&nbsp;
+						<a routerLink="/summary">summary</a>
+					</div>
+				</div>
+			</div>
+	</div>
+</nav>		
+<br/>
+<router-outlet></router-outlet>
+			

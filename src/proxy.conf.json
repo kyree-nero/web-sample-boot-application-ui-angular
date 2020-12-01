@@ -1,0 +1,7 @@
+{   
+	"/sample": {
+      "target": "http://localhost:8080",
+      "_target": "http://localhost:3000",
+      "secure": false
+     } 
+  }

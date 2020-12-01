@@ -1,0 +1,43 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  },
+  "greeting": {
+    "id": 11,
+    "message": "Hello from Db Json Mock"
+  },
+  "sample": [
+    {
+      "id": 6,
+      "content": "s2",
+      "version": 0
+    },
+    {
+      "content": "t23",
+      "id": 7
+    },
+    {
+      "content": "dddd",
+      "id": 9
+    },
+    {
+      "content": "dddsss",
+      "id": 10
+    }
+  ],
+  "logout": {}
+}
