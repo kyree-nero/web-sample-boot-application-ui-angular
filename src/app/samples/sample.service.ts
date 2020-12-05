@@ -4,6 +4,8 @@ import { of } from 'rxjs/observable/of';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Sample } from './sample';
+import { SampleView } from './sample.view';
+import { SampleAddView } from './sample.add.view';
 import { SecurityService } from '../security/security.service';
 
 @Injectable() 
@@ -53,12 +55,13 @@ export class SampleService {
 	      );
 	  }
   
-  	  add(content:string) : Observable<any> {
+  	  add(sampleAddView: SampleAddView) : Observable<any> {
 	    console.log('attempt add');
 	    console.log(this.url); 
 	    var newSample = new Sample();
 	    var csrf:string = this.securityService.getCSRF();
-	    newSample.content = content;
+		newSample.content = sampleAddView.content;
+		sampleAddView.errors = [];
 	    return this.http.post(this.url, newSample,{
 			   headers: {'X-CSRF-TOKEN':csrf}
 			} )
@@ -68,30 +71,35 @@ export class SampleService {
 	                          console.log(incoming);
 	                          console.log(`add samples--end `);
 	                        }),
-	        catchError(this.handleError<any>('add', []))
+	        catchError(this.handleErrorForAdd<any>('add', sampleAddView, []))
 	      );
 	  }
+
 	  
 	  
-	  update(id:number, content:string, version:number) : Observable<any> {
-	    console.log('attempt add');
-	    console.log(this.url+'/' +id);
+	  
+	//   update(id:number, content:string, version:number) : Observable<any> {
+	update(sampleView:SampleView) : Observable<any> {
+		console.log('attempt update');
+		console.log(sampleView);
+	    console.log(this.url+'/' +sampleView.sample.id);
 	    var newSample:Sample = new Sample();
 	    var csrf:string = this.securityService.getCSRF();
-	    newSample.content = content;
-	    newSample.id = id;
-	    newSample.version = version;
-	    console.log(newSample);
-	    return this.http.put(this.url+'/' +id, newSample,{
+	    newSample.content = sampleView.alteredContent;
+	    newSample.id = sampleView.sample.id;
+	    newSample.version = sampleView.sample.version;
+		console.log(newSample);
+		sampleView.errors = [];
+	    return this.http.put(this.url+'/' +sampleView.sample.id, newSample,{
 			   headers: {'X-CSRF-TOKEN':csrf}
 			} )
 	      .pipe(
 	        tap(incoming => {
-	                          console.log(`add samples--start `);
+	                          console.log(`update samples--start `);
 	                          console.log(incoming);
-	                          console.log(`add samples--end `);
+	                          console.log(`update samples--end `);
 	                        }),
-	        catchError(this.handleError<any>('update', []))
+	        catchError(this.handleErrorBySampleView<any>('update', sampleView, []))
 	      );
 	  }
 	  
@@ -101,9 +109,63 @@ export class SampleService {
 	    return (error: any): Observable<T> => {
 	
 	      console.error(error); // log to console instead
-	
+		  
 	      console.log(`${operation} failed: ${error.message}`);
-	
+			
+		 
+	      // Let the app keep running by returning an empty result.
+	      return of(result as T);
+	    };
+	  }
+
+	  private handleErrorForAdd<T> (operation = 'operation', addSample: SampleAddView, result?: T) {
+	    return (data: any): Observable<T> => {
+	      console.error(data); // log to console instead
+		  
+	      console.log(`${operation} failed: ${data.message}`);
+			
+		  if( data.status == 400 ){
+			//bad request
+
+			console.log ("bad request... parse")
+
+			
+
+			var errormessages = [];
+			for ( var dataError in data.error.errors){
+				console.log('cm ... ' +  data.error.errors[dataError].defaultMessage);
+				addSample.errors.push(data.error.errors[dataError].defaultMessage);
+				//errormessages.push(dataError.defaultMessage);
+			}
+			console.log('errors is now ' + addSample.errors.length)
+		 }
+	      // Let the app keep running by returning an empty result.
+	      return of(result as T);
+	    };
+	  }
+
+	  private handleErrorBySampleView<T> (operation = 'operation', sampleView: SampleView, result?: T) {
+	    return (data: any): Observable<T> => {
+		  console.log(sampleView);
+	      console.error(data); // log to console instead
+		  
+	      console.log(`${operation} failed: ${data.message}`);
+			
+		 if( data.status == 400 ){
+			//bad request
+
+			console.log ("bad request... parse")
+
+			
+
+			var errormessages = [];
+			for ( var dataError in data.error.errors){
+				console.log('cm ... ' +  data.error.errors[dataError].defaultMessage);
+				sampleView.errors.push(data.error.errors[dataError].defaultMessage);
+				//errormessages.push(dataError.defaultMessage);
+			}
+			
+		 }
 	      // Let the app keep running by returning an empty result.
 	      return of(result as T);
 	    };

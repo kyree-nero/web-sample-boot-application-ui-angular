@@ -1,29 +1,5 @@
-<!--
-    <div id="divTableRowContent{{sample.id}}Id" class="divTableRow">
-      <div id="divTableCell1Content{{sample.id}}Id" class="divTableCell">
-        <button id="delete{{sample.id}}Id" onclick="deleteClick(this, 4)">
-            <img src="assets/images/remove.png" width="25" height="25">
-        </button>
-      </div>
-      <div id="divTableCell2Content{{sample.id}}Id" class="divTableCell">
-         <button id="update4Id" onclick="openEntryForUpdate(this, 4)">
-          <img src="assets/images/edit.png" width="25" height="25">
-         </button>
-      </div>
-      <div id="divTableCell3Content{{sample.id}}Id" class="divTableCell">
-        <input id="contentEdit{{sample.id}}Id" value="{{sample.content}}" disabled="" width="50" type="text">
-        <div id="confirmUpdate{{sample.id}}DivId" style="display:none">
-          <button id="confirmUpdate4Id" onclick="updateClick(this, 4, 1, '6999f2b5-caaa-4cb8-9f83-f1a8824ce8d7')">
-            <img src="assets/images/check.png" width="25" height="25">
-          </button>
-          <button id="cancel{{sample.id}}Id" onclick="location.reload();">
-            <img src="assets/images/cancel.jpeg" width="25" height="25">
-          </button>
-        </div>
-      </div>
-    </div>
-    -->
-    <font color=blue>
+
+<font color=blue>
 	Sample Data <br/>
 	
 	<table>
@@ -34,47 +10,74 @@
 				<td>CONTENT</td>
 			</tr>
     <tr *ngFor="let sampleview of samples" >
-      <td id="divTableCell1Content{{sampleview.sample.id}}Id">
-        <button id="delete{{sampleview.sample.id}}Id" (click)="delete(sampleview.sample.id)"  >
-            <img src="assets/images/remove.png" width="25" height="25">
-        </button>
+      <td>
+          <div>
+            <ul *ngFor="let errorItem of sampleview.errors">
+              <li >{{ errorItem }}</li>
+            </ul>
+          </div>
+          <div>
+            <span>
+              <button id="delete{{sampleview.sample.id}}Id" (click)="delete(sampleview.sample.id)"  >
+                <img src="assets/images/remove.png" width="25" height="25">
+              </button>
+            </span>
+            <span>
+              <button id="update4Id" (click)="sampleview.updateEnabled=true">
+                <img src="assets/images/edit.png" width="25" height="25">
+               </button>
+            </span>
+            <span>
+              <input id="contentEdit{{sampleview.sample.id}}Id" 
+                [(ngModel)]="sampleview.alteredContent" 
+                [(disabled)]="!sampleview.updateEnabled" 
+                width="50" type="text">
+              <div id="confirmUpdate{{sampleview.sample.id}}DivId" *ngIf="sampleview.updateEnabled"  style="display:inline-block">
+                <button id="confirmUpdate4Id" (click)="update(sampleview.sample.id)">
+                  <img src="assets/images/check.png" width="25" height="25">
+                </button>
+                <button id="cancel{{sampleview.sample.id}}Id" (click)="cancelUpdate(sampleview)">
+                  <img src="assets/images/cancel.jpeg" width="25" height="25">
+                </button>
+              </div>
+
+            </span>
+          </div>
       </td>
-      <td id="divTableCell2Content{{sampleview.sample.id}}Id">
-         <button id="update4Id" (click)="sampleview.updateEnabled=true">
-          <img src="assets/images/edit.png" width="25" height="25">
-         </button>
-      </td>
-      <td id="divTableCell3Content{{sampleview.sample.id}}Id">
-        <input id="contentEdit{{sampleview.sample.id}}Id" [(ngModel)]="sampleview.sample.content" [(disabled)]="!sampleview.updateEnabled" width="50" type="text">
-        <div id="confirmUpdate{{sampleview.sample.id}}DivId" *ngIf="sampleview.updateEnabled"  style="display:inline-block">
-          <button id="confirmUpdate4Id" (click)="update(sampleview.sample.id)">
-            <img src="assets/images/check.png" width="25" height="25">
-          </button>
-          <button id="cancel{{sampleview.sample.id}}Id" (click)="sampleview.updateEnabled = false">
-            <img src="assets/images/cancel.jpeg" width="25" height="25">
-          </button>
-        </div>
-      </td>
+      
     </tr>
   
     <tr>
-        <td id="divTableCellEnd1Id">
-          <button id="addId" (click)="addEnabled = true">
-            <img src="assets/images/add.png" width="25" height="25">
-          </button>
-        </td>
-        <td id="divTableCellEnd2Id">&nbsp;</td>
-        <td id="divTableCellEnd3Id">
-          <input id="newContent" [(ngModel)]="newContent" *ngIf="addEnabled" width="50">
-          <div id="confirmAddDivId" *ngIf="addEnabled" style="display:inline">
-            <button id="confirmAddId" (click)="add()">
-              <img src="assets/images/check.png" width="25" height="25">
-            </button>
-            <button id="cancelAddId" (click)="addEnabled=true">
-              <img src="assets/images/cancel.jpeg" width="25" height="25">
-            </button>
+        <td>
+          <div>
+            <div *ngIf="addSample.errors">
+              <ul *ngFor="let addError of addSample.errors" >
+                <li >{{ addError }}</li>
+              </ul>
+            </div>
+            <div>
+              <span>
+                <button id="addId" (click)="addSample.addEnabled = true">
+                  <img src="assets/images/add.png" width="25" height="25">
+                </button>
+              </span>
+              <span>
+                <input id="newContent" [(ngModel)]="newContent" *ngIf="addSample.addEnabled" width="50">
+                <div id="confirmAddDivId" *ngIf="addSample.addEnabled" style="display:inline">
+                  <button id="confirmAddId" (click)="add()">
+                    <img src="assets/images/check.png" width="25" height="25">
+                  </button>
+                  <button id="cancelAddId" (click)="newContent = '';addSample.addEnabled = false; addSample.errors = []" >
+                    <img src="assets/images/cancel.jpeg" width="25" height="25">
+                  </button>
+                </div>
+
+              </span>
+            </div>
           </div>
+
         </td>
+
       </tr>
     </table>
   </font>
