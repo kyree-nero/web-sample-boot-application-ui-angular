@@ -24,7 +24,7 @@ export class AppComponent implements OnInit{
   }
 
 	ngOnInit(){
-    // console.log('On init');
+     console.log('On init');
     // this.postInitialSamples();
     // console.log('On init end');
 	   
